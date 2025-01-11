@@ -1,15 +1,38 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { DataPoint } from '@/types/types';
+import { formatPrice, formatTimestampToDateTime } from '@/app/utils/PriceUtils';
 
 interface ToolTipProps {
-  x: number; // Only need x to position the vertical line
+  x: number; // X position of the tooltip
   height: number; // Height of the graph
+  data: DataPoint; // Data point to display
 }
 
-const ToolTip: React.FC<ToolTipProps> = ({ x, height }) => {
+const ToolTip: React.FC<ToolTipProps> = ({ x, height, data }) => {
+
+  const { c: price, t: date } = data;
+  const formattedPrice = formatPrice(price);
+  const formattedDate = formatTimestampToDateTime(date);
+
+  const labelRef = useRef<View>(null);
+  const [labelWidth, setLabelWidth] = useState(0);    
+
+  useEffect(() => {
+    if (labelRef.current) {
+        labelRef.current.measure((x, y, width, height) => {
+            setLabelWidth(width);
+        });
+    }
+    }, [labelRef]);
+
   return (
-    <View style={[styles.tooltip, { left: x }, { height }]}>
-      <View style={[styles.line]} />
+    <View style={[styles.tooltip, { left: x}, {top: 0}]}>
+      <View style={[styles.labelContainer, { right: labelWidth / 2 }]} ref={labelRef}>
+        <Text style={styles.priceLabel}>{formattedPrice}</Text>
+        <Text style={styles.dateLabel}>{formattedDate}</Text>
+      </View>
+      <View style={[styles.line, { height: height }]} />
     </View>
   );
 };
@@ -17,15 +40,28 @@ const ToolTip: React.FC<ToolTipProps> = ({ x, height }) => {
 const styles = StyleSheet.create({
   tooltip: {
     position: 'absolute',
-    width: 1, // The width of the vertical line
-    top: 0,
+  },
+  labelContainer: {
+    justifyContent: 'center',
+    marginBottom: 5, // Space between labels and line
+    backgroundColor: 'pink'
+  },
+  priceLabel: {
+    color: 'black',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  dateLabel: {
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 12,
   },
   line: {
     width: 1, // Line thickness
-    height: '100%', // Ensure it spans the full height
     borderStyle: 'dashed',
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'darkgray',
   },
 });
 

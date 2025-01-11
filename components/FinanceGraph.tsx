@@ -8,25 +8,21 @@ import { GRAPH_HEIGHT } from '../constants/Dimensions';
 
 const { width } = Dimensions.get('window');
 const height = GRAPH_HEIGHT
-const margin = 20;
+const margin = 50;
 
 interface FinanceGraphProps {
   data: DataPoint[];
 }
 
 const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; data: DataPoint | null }>({
-    x: 0,
-    y: 0,
-    data: null,
-  });
+  const [selectedDataPoint, setSelectedDataPoint] = useState<{ xPosition: number; data: DataPoint } | null>(null);
 
   // X Scale (Date)
   const domainStartDate = data[0].t;
   const domainEndDate = data[data.length - 1].t;
   const scaleX = d3.scaleLinear()
     .domain([domainStartDate, domainEndDate])
-    .range([margin, width - margin]);
+    .range([0, width]);
 
   // Y Scale (Price)
   const max = Math.max(...data.map(val => val.c));
@@ -47,22 +43,15 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
     const index = Math.round((x / width) * (data.length - 1));
     const clampedIndex = Math.max(0, Math.min(data.length - 1, index));
     const closestDataPoint = data[clampedIndex];
-    const yValue = scaleY(closestDataPoint.c);
-    try {
-      console.log('X:', x, 'Y:', yValue, 'Data:', closestDataPoint);
-      setTooltip({
-      x,
-      y: yValue,
+    
+    setSelectedDataPoint({
+      xPosition: x,
       data: closestDataPoint,
       });
-    } catch (e) {
-      console.error('Caught error in createTooltipForXValue:', e);
-    }
   };
 
   const handlePress = (event: any) => {
     try {
-
       const pressX = event.nativeEvent.locationX;
       createTooltipForXValue(pressX);
     } catch (e) {
@@ -77,8 +66,8 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
           {path && <Path path={path} color="blue" strokeWidth={1} style="stroke" />}
         </Canvas>
       </Pressable>
-      {tooltip.data && 
-          <ToolTip x={tooltip.x} height={height}/>
+      {selectedDataPoint && 
+          <ToolTip x={selectedDataPoint.xPosition} height={height} data={selectedDataPoint.data}/>
         }
     </View>
   );
