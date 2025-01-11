@@ -1,11 +1,32 @@
 import React from 'react';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import FinanceGraph from '@/components/FinanceGraph';
+import { ThemedView } from '@/components/ThemedView';
+import useSampleData from '@/hooks/useSampleData';
+import { View, Text } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
+  const { data, loading, error } = useSampleData();
+
+  if (loading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View>
+        <Text>Error: {error}</Text>
+      </View>
+    );
+  }
+  
   return (
-    <FinanceGraph/>
+    <ThemedView style = {[{paddingTop: 100}]}>
+      <FinanceGraph data={data}/>
+    </ThemedView>
   );
 }

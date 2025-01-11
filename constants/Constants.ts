@@ -1,0 +1,1 @@
+export const pathToMockData7D = '/Users/ocul/Documents/Projects/Personal/ogulcan-acikel-reactnative-exc/constants/mock_data_7D.json'
