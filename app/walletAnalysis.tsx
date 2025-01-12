@@ -3,6 +3,7 @@ import FinanceGraph from '@/components/FinanceGraph';
 import useSampleData from '@/hooks/useSampleData';
 import { View, Text } from 'react-native';
 import { Stack } from 'expo-router';
+import TimeFilterView from '@/components/ui/TimeFilterView';
 import { TimeFilter } from '@/types/types';
 
 const WalletAnalysis = () => {
@@ -29,6 +30,9 @@ const WalletAnalysis = () => {
     );
   }
 
+  const handleFilterChange = (newFilter: TimeFilter) => {
+    setFilter(newFilter);
+  }
   return (
     <View style={{ flex: 1 }}>
       <Stack.Screen
@@ -36,6 +40,7 @@ const WalletAnalysis = () => {
           title: 'Cüzdan Analizi'
         }}
       />
+      <TimeFilterView selectedFilter={filter} onFilterSelected={handleFilterChange} />
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 80, padding: 20 }}>
         <FinanceGraph data={data} style={{ height: 100, width: '100%' }} />
       </View>
