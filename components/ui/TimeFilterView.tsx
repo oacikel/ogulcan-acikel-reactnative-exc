@@ -1,6 +1,7 @@
+import { globalStyles } from '@/app/styles/globalStyles';
 import { TimeFilter } from '@/types/types';
 import React, { useState } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 interface TimeFilterViewProps {
     selectedFilter?: TimeFilter;
@@ -16,27 +17,20 @@ const TimeFilterView: React.FC<TimeFilterViewProps> = ({ selectedFilter, onFilte
     };
 
     return (
-        <View style={styles.container}>
-            <Button
-                title="7D"
+        <View style={globalStyles.filterViewContainer}>
+            <TouchableOpacity
                 onPress={() => handlePress('7D')}
-                color={activeFilter === '7D' ? 'blue' : 'gray'}
-            />
-            <Button
-                title="1M"
+                style={activeFilter === '7D' ? globalStyles.filterActiveContainer : globalStyles.filterInactiveContainer}
+            >
+                <Text style={activeFilter === '7D' ? globalStyles.filterActiveText: globalStyles.filterInactiveText }>Son 7 Gün</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
                 onPress={() => handlePress('1M')}
-                color={activeFilter === '1M' ? 'blue' : 'gray'}
-            />
+                style={activeFilter === '1M' ? globalStyles.filterActiveContainer : globalStyles.filterInactiveContainer}>
+                <Text style={activeFilter === '1M' ? globalStyles.filterActiveText: globalStyles.filterInactiveText }>Son 30 Gün</Text>
+            </TouchableOpacity>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 10,
-    },
-});
 
 export default TimeFilterView;
