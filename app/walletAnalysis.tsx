@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FinanceGraph from '@/components/FinanceGraph';
 import useSampleData from '@/hooks/useSampleData';
 import { View, Text } from 'react-native';
 import { Stack } from 'expo-router';
+import { TimeFilter } from '@/types/types';
 
 const WalletAnalysis = () => {
-  const { data, loading, error } = useSampleData();
+  const { data, loading, error, fetchData } = useSampleData();
+  const [filter, setFilter] = useState<TimeFilter>('7D');
+
+  useEffect(() => {
+    fetchData(filter);
+  }, [filter]);
 
   if (loading) {
     return (
