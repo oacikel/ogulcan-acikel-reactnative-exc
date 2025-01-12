@@ -6,6 +6,8 @@ import { DataPoint } from '@/types/types';
 import ToolTip from './ui/ToolTip';
 import { formatNumberToK } from '@/app/utils/PriceUtils';
 import DashedLine from './ui/DashedLine';
+import { globalStyles } from '@/app/styles/globalStyles';
+import { Colors } from '@/constants/Colors';
 
 const margin = 0;
 
@@ -153,10 +155,10 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
       [
         Skia.Color('transparent'), // Transparent part
         Skia.Color('transparent'), // Sharp transition to green
-        Skia.Color('green'),       // Green part
-        Skia.Color('green'),       // Sharp transition back to transparent
+        Skia.Color(Colors.primaryLight),       // Green part
+        Skia.Color(Colors.primaryLight),       // Sharp transition back to transparent
       ],
-      [0, 0.89, 0.9, 1], // Sharp transitions
+      [0, 0.8, 0.9, 1], // Sharp transitions
       TileMode.Repeat
     );
   
@@ -172,8 +174,8 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
         {yTicks.map((tick, index) => {
           const y = scaleY(tick); // Get Y position for the tick
           return (
-            <View key={index} style={[styles.labelContainer, { top: y, width: width-labelWidth }]}>
-              <Text style={[styles.label]} ref={labelRef}>{formatNumberToK(tick)}</Text>
+            <View key={index} style={[globalStyles.graphLabelContainer, { top: y, width: width-labelWidth }]}>
+              <Text style={globalStyles.graphLabelText} ref={labelRef}>{formatNumberToK(tick)}</Text>
               <DashedLine style={{ width: width-labelWidth }} orientation='horizontal'/>
             </View>
           );
@@ -182,12 +184,11 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
       <Pressable style={{ left: labelWidth, backgroundColor: 'darkTransparent', width: width - labelWidth }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          onTouchMove={handleTouchMove}
->
+          onTouchMove={handleTouchMove}>
         <Canvas style={{ height, top: 0 }}>
-          {areaLeft && <Path path={areaLeft} color="green" strokeWidth={1} style="stroke" paint={dashPaint} />}
-          {pathLeft && <Path path={pathLeft} color="green" strokeWidth={1} style="stroke" />}
-          {pathRight && <Path path={pathRight} color="darkGrey" strokeWidth={1} style="stroke" />}
+          {areaLeft && <Path path={areaLeft} paint={dashPaint} />}
+          {pathLeft && <Path path={pathLeft} color={Colors.primary} strokeWidth={1} style="stroke" />}
+          {pathRight && <Path path={pathRight} color={Colors.textDark10} strokeWidth={1} style="stroke" />}
         </Canvas>
       </Pressable>
   
@@ -208,17 +209,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-  },
-  labelContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  label: {
-    fontSize: 10,
-    color: 'gray',
-    top: -5,
-  },
+  }
 });
 
 export default FinanceGraph;

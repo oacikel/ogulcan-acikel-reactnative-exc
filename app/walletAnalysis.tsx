@@ -51,7 +51,7 @@ const WalletAnalysis = () => {
       />
       <TimeFilterView selectedFilter={filter} onFilterSelected={handleFilterChange} />
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 80, padding: 20 }}>
-        <FinanceGraph data={data} style={{ height: 100, width: '100%' }} />
+        <FinanceGraph data={data} style={{ height: 292, width: '100%' }} />
       </View>
     </View>
   );

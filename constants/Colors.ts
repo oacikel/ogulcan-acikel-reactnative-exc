@@ -8,4 +8,5 @@ export const Colors = {
   textDark60: '#1F222960', // 60% opacity -> used in labels
   textDark40: '#1F222940', // 40% opacity
   textDark20: '#1F222920', // 20% opacity -> used in inactive buttons
+  textDark10: '#1F222910', // 10% opacity
 };

@@ -29,4 +29,15 @@ export const globalStyles = StyleSheet.create({
         color: Colors.textDark80,
         fontSize: 16,
     },
+    graphLabelContainer: {
+        position: 'absolute',
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+    },
+    graphLabelText: {
+        color: Colors.textDark60,
+        fontSize: 16,
+        right: 8,
+        top: 8
+    },
 });
