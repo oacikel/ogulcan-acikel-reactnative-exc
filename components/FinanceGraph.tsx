@@ -17,6 +17,7 @@ interface FinanceGraphProps {
 const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
   const [selectedDataPoint, setSelectedDataPoint] = useState<{ xPosition: number; data: DataPoint } | null>(null);
   const [pressX, setPressX] = useState<number | null>(null);
+  const [isToolTipModeOn, setIsToolTipModeOn] = useState(false);
   const labelRef = useRef<Text>(null);
   const containerRef = useRef<View>(null);
   const [labelWidth, setLabelWidth] = useState(0);
@@ -41,6 +42,23 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
       });
     }
   }, [labelRef]);
+
+  const createTooltipForXValue = (x: number) => {
+    const index = Math.round(((x) / (width - labelWidth)) * (data.length - 1));
+    const clampedIndex = Math.max(0, Math.min(data.length - 1, index));
+    const closestDataPoint = data[clampedIndex];
+
+    setSelectedDataPoint({
+      xPosition: x+labelWidth,
+      data: closestDataPoint,
+    });
+  };
+
+  useEffect(() => {
+    if(isToolTipModeOn && pressX !== null) {
+      createTooltipForXValue(pressX);
+    }
+  }, [isToolTipModeOn, pressX]);
   
   // X Scale (Date)
   const domainStartDate = data[0].t;
@@ -67,9 +85,13 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
 
 
   const createPaths = (pressIndex: number | null) => {
+    
+    // A bit of explanation is needed here: Basically we divide the chart into 2 parts. In the division we are ought to
+    // show the toolTip. However we should also be checking isToolTipModeOn since that's what determines whether the tooltip mode is active or not.
+    console.log({isToolTipModeOn})
+    const leftData = pressIndex !== null && isToolTipModeOn ? data.slice(0, pressIndex + 1) : data;
+    const rightData = pressIndex !== null && isToolTipModeOn ? data.slice(pressIndex) : [];
 
-    const leftData = pressIndex !== null ? data.slice(0, pressIndex + 1) : data;
-    const rightData = pressIndex !== null ? data.slice(pressIndex) : [];
     const areaLeft = areaGenerator(leftData) ? Skia.Path.MakeFromSVGString(areaGenerator(leftData)!) : null;
     const pathLeft = lineGenerator(leftData) ? Skia.Path.MakeFromSVGString(lineGenerator(leftData)!) : null;
     
@@ -80,26 +102,53 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
 
   const { pathLeft, areaLeft, pathRight  } = createPaths(pressX !== null ? Math.round((pressX / (width-labelWidth)) * (data.length - 1)) : null);
 
-  const createTooltipForXValue = (x: number) => {
-    const index = Math.round(((x) / (width - labelWidth)) * (data.length - 1));
-    const clampedIndex = Math.max(0, Math.min(data.length - 1, index));
-    const closestDataPoint = data[clampedIndex];
 
-    setSelectedDataPoint({
-      xPosition: x+labelWidth,
-      data: closestDataPoint,
-    });
+  // Upon Press (onTouchStart) Timer Should Start and pressX should be updated
+  // When user drags their finder pressX should be updated
+  // If the user lets go (onTouchEnd) timer should set to zero
+  // If timer completes while user is still touching -> isToolTipModeOn = true
+  // If isToolTipModeOn is true and pressX is not null, then we should show the tooltip -> That's it
+  const holdTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const startHoldTimer = () => {
+    holdTimer.current = setTimeout(() => {
+      console.log('Tooltip mode on');
+      setIsToolTipModeOn(true);
+    }, 300);
   };
 
-  const handlePress = (event: any) => {
-    try {
-      const pressX = event.nativeEvent.locationX;
-      setPressX(pressX);
-      createTooltipForXValue(pressX);
-    } catch (e) {
-      console.error('Caught error in handlePress:', e);
+  const clearHoldTimer = () => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
     }
   };
+
+  const handleTouchStart = (event: any) => {
+    console.log('touch start');
+    startHoldTimer();
+    const pressX = event.nativeEvent?.locationX;
+    setPressX(pressX);
+  }
+
+  const handleTouchEnd = (event: any) => {
+    console.log('touch end');
+    clearHoldTimer();
+    clearToolTipState();
+  }
+
+  const handleTouchMove = (event: any) => {
+    const pressX = event.nativeEvent?.locationX;
+    setPressX(pressX);
+  }
+
+  // Helper Function To Clear All Tooltip Related Stuff
+  const clearToolTipState = () => {
+    setIsToolTipModeOn(false);
+    setPressX(null);
+    setSelectedDataPoint(null);
+  }
+
 
     // Create a shader for the dashed pattern
     const dashShader = Skia.Shader.MakeLinearGradient(
@@ -134,14 +183,18 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
           );
         })}
       </View>
-      <Pressable onPress={handlePress} style={{ left: labelWidth, backgroundColor: 'darkTransparent', width:width-labelWidth }}>
+      <Pressable style={{ left: labelWidth, backgroundColor: 'darkTransparent', width: width - labelWidth }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchMove={handleTouchMove}
+>
         <Canvas style={{ height, top: 0 }}>
-          {areaLeft && <Path path={areaLeft} color="green" strokeWidth={1} style="stroke" paint={dashPaint}/>}
-          {pathLeft && <Path path={pathLeft} color="green" strokeWidth={1} style="stroke"/>}
+          {areaLeft && <Path path={areaLeft} color="green" strokeWidth={1} style="stroke" paint={dashPaint} />}
+          {pathLeft && <Path path={pathLeft} color="green" strokeWidth={1} style="stroke" />}
           {pathRight && <Path path={pathRight} color="darkGrey" strokeWidth={1} style="stroke" />}
         </Canvas>
       </Pressable>
-    
+  
       {selectedDataPoint && (
         <ToolTip x={selectedDataPoint.xPosition} height={height} data={selectedDataPoint.data} />
       )}
