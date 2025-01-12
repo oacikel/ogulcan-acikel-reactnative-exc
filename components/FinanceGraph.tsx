@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import { Canvas, Path, Skia, TileMode } from '@shopify/react-native-skia';
 import { DataPoint } from '@/types/types';
 import ToolTip from './ui/ToolTip';
-import { GRAPH_HEIGHT, GRAPH_WIDTH } from '../constants/Dimensions';
+import { GRAPH_HEIGHT } from '../constants/Dimensions';
 import { formatNumberToK } from '@/app/utils/PriceUtils';
 
 const { width } = Dimensions.get('window');
@@ -34,7 +34,7 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
   const domainEndDate = data[data.length - 1].t;
   const scaleX = d3.scaleLinear()
     .domain([domainStartDate, domainEndDate])
-    .range([0, width]);
+    .range([0, width-labelWidth]);
 
   // Y Scale (Price)
   const max = Math.max(...data.map(val => val.c));
@@ -65,7 +65,7 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
     return { pathLeft, areaLeft, pathRight };
   };
 
-  const { pathLeft, areaLeft, pathRight  } = createPaths(pressX !== null ? Math.round((pressX / width) * (data.length - 1)) : null);
+  const { pathLeft, areaLeft, pathRight  } = createPaths(pressX !== null ? Math.round((pressX / (width-labelWidth)) * (data.length - 1)) : null);
 
   const createTooltipForXValue = (x: number) => {
     const index = Math.round(((x) / (width - labelWidth)) * (data.length - 1));
