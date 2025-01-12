@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { MockData, DataPoint, TimeFilter } from '../types/types';
-import * as Constants from '../constants/Constants';
 
 const useSampleData = () => {
   const [data, setData] = useState<DataPoint[]>([]);
@@ -12,7 +11,6 @@ const useSampleData = () => {
     setError(null);
     try {
       const url = getUrlForFilter(filter);
-      console.log('fetching data from:', url);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Network response was not ok');

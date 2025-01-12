@@ -5,13 +5,22 @@ import { View, Text } from 'react-native';
 import { Stack } from 'expo-router';
 import TimeFilterView from '@/components/ui/TimeFilterView';
 import { TimeFilter } from '@/types/types';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setFilter } from './redux/slices/filterSlice';
 
 const WalletAnalysis = () => {
   const { data, loading, error, fetchData } = useSampleData();
-  const [filter, setFilter] = useState<TimeFilter>('7D');
+  const dispatch = useDispatch();
+  const filter = useSelector((state:any) => state.filter.filter);
 
   useEffect(() => {
-    fetchData(filter);
+    console.log('filter', filter);
+    if (filter) {
+      fetchData(filter);
+    } else {
+      dispatch(setFilter('7D'));
+    }
   }, [filter]);
 
   if (loading) {
@@ -31,7 +40,7 @@ const WalletAnalysis = () => {
   }
 
   const handleFilterChange = (newFilter: TimeFilter) => {
-    setFilter(newFilter);
+    dispatch(setFilter(newFilter));
   }
   return (
     <View style={{ flex: 1 }}>
