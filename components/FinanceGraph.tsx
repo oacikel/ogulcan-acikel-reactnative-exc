@@ -88,7 +88,6 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
     
     // A bit of explanation is needed here: Basically we divide the chart into 2 parts. In the division we are ought to
     // show the toolTip. However we should also be checking isToolTipModeOn since that's what determines whether the tooltip mode is active or not.
-    console.log({isToolTipModeOn})
     const leftData = pressIndex !== null && isToolTipModeOn ? data.slice(0, pressIndex + 1) : data;
     const rightData = pressIndex !== null && isToolTipModeOn ? data.slice(pressIndex) : [];
 
@@ -112,7 +111,6 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
 
   const startHoldTimer = () => {
     holdTimer.current = setTimeout(() => {
-      console.log('Tooltip mode on');
       setIsToolTipModeOn(true);
     }, 300);
   };
@@ -125,14 +123,12 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
   };
 
   const handleTouchStart = (event: any) => {
-    console.log('touch start');
     startHoldTimer();
     const pressX = event.nativeEvent?.locationX;
     setPressX(pressX);
   }
 
   const handleTouchEnd = (event: any) => {
-    console.log('touch end');
     clearHoldTimer();
     clearToolTipState();
   }
