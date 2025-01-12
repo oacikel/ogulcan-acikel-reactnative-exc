@@ -1,30 +1,43 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Pressable, Text } from 'react-native';
+import { View, StyleSheet, Pressable, Text, ViewStyle } from 'react-native';
 import * as d3 from 'd3';
 import { Canvas, Path, Skia, TileMode } from '@shopify/react-native-skia';
 import { DataPoint } from '@/types/types';
 import ToolTip from './ui/ToolTip';
-import { GRAPH_HEIGHT } from '../constants/Dimensions';
 import { formatNumberToK } from '@/app/utils/PriceUtils';
+import DashedLine from './ui/DashedLine';
 
-const { width } = Dimensions.get('window');
-const height = GRAPH_HEIGHT;
-const margin = 50;
+const margin = 0;
 
 interface FinanceGraphProps {
   data: DataPoint[];
+  style?: ViewStyle;
 }
 
-const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
+const FinanceGraph: React.FC<FinanceGraphProps> = ({ data, style }) => {
   const [selectedDataPoint, setSelectedDataPoint] = useState<{ xPosition: number; data: DataPoint } | null>(null);
   const [pressX, setPressX] = useState<number | null>(null);
   const labelRef = useRef<Text>(null);
-  const [labelWidth, setLabelWidth] = useState(60);
+  const containerRef = useRef<View>(null);
+  const [labelWidth, setLabelWidth] = useState(0);
+  const [width, setWidth] = useState(60);
+  const [height, setHeight] = useState(60);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.measure((x, y, width, height) => {
+        setWidth(width);
+        setHeight(height);
+      });
+    }
+  }, [containerRef]);
 
   useEffect(() => {
     if (labelRef.current) {
       labelRef.current.measure((x, y, width, height) => {
-        setLabelWidth(width+30);
+        if(labelWidth < width) { // Added this to ensure we have grid lines of the same width
+          setLabelWidth(width);
+        }
       });
     }
   }, [labelRef]);
@@ -109,21 +122,21 @@ const FinanceGraph: React.FC<FinanceGraphProps> = ({ data }) => {
     
 
   return (
-    <View style={styles.container}>
+    <View style={[style]} ref={containerRef}>
             <View style={styles.gridContainer}>
         {yTicks.map((tick, index) => {
           const y = scaleY(tick); // Get Y position for the tick
           return (
-            <View key={index} style={[styles.labelContainer, { top: y }]}>
+            <View key={index} style={[styles.labelContainer, { top: y, width: width-labelWidth }]}>
               <Text style={[styles.label]} ref={labelRef}>{formatNumberToK(tick)}</Text>
-              <View style={[styles.gridLine]} />
+              <DashedLine style={{ width: width-labelWidth }} orientation='horizontal'/>
             </View>
           );
         })}
       </View>
-      <Pressable onPress={handlePress} style={{ paddingLeft: labelWidth }}>
-        <Canvas style={{ width: width-labelWidth, height }}>
-          {areaLeft && <Path path={areaLeft} color="green" strokeWidth={1} style="stroke" paint={dashPaint} />}
+      <Pressable onPress={handlePress} style={{ left: labelWidth, backgroundColor: 'darkTransparent', width:width-labelWidth }}>
+        <Canvas style={{ height, top: 0 }}>
+          {areaLeft && <Path path={areaLeft} color="green" strokeWidth={1} style="stroke" paint={dashPaint}/>}
           {pathLeft && <Path path={pathLeft} color="green" strokeWidth={1} style="stroke"/>}
           {pathRight && <Path path={pathRight} color="darkGrey" strokeWidth={1} style="stroke" />}
         </Canvas>
@@ -147,20 +160,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  gridLine: {
-    width: '100%',
-    height: 1,
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
-  },
   labelContainer: {
     position: 'absolute',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   label: {
     fontSize: 10,
     color: 'gray',
+    top: -5,
   },
 });
 

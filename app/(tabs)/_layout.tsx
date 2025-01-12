@@ -1,8 +1,8 @@
 import React from 'react';
 import FinanceGraph from '@/components/FinanceGraph';
-import { ThemedView } from '@/components/ThemedView';
 import useSampleData from '@/hooks/useSampleData';
 import { View, Text } from 'react-native';
+import { GRAPH_HEIGHT } from '@/constants/Dimensions';
 
 export default function TabLayout() {
 
@@ -25,8 +25,8 @@ export default function TabLayout() {
   }
   
   return (
-    <ThemedView style = {[{paddingTop: 100}]}>
-      <FinanceGraph data={data}/>
-    </ThemedView>
+    <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 80, padding: 20 }}>
+      <FinanceGraph data={data} style={{height: 100, width:'100%'}}/>
+    </View>
   );
 }
