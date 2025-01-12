@@ -22,8 +22,9 @@ export function formatTimestampToDateTime(timestamp: number): string {
     const month = monthNames[date.getMonth()];
     return `${day} ${month}`;
 }
-
-export default {
-    formatPrice,
-    formatTimestampToDateTime
+export function formatNumberToK(number: number): string {
+    if (number >= 1000) {
+        return (number / 1000).toFixed(2) + 'K';
+    }
+    return number.toString();
 }

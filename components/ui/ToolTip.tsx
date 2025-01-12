@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   labelContainer: {
     justifyContent: 'center',
     marginBottom: 5, // Space between labels and line
-    backgroundColor: 'pink'
   },
   priceLabel: {
     color: 'black',

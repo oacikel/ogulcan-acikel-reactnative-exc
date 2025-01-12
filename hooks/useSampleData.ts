@@ -11,6 +11,7 @@ const useSampleData = () => {
         const fetchData = async () => {
             try {
                 const response = await fetch(Constants.pathToMockData7D);
+                // const response = await fetch(Constants.pathToMockDataShort);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
