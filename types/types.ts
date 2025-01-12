@@ -17,3 +17,5 @@ export interface DataPoint {
     s: string;
     nextTime: number | null;
   }
+
+  export type TimeFilter = '7D' | '1M'

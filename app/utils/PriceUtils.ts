@@ -28,3 +28,5 @@ export function formatNumberToK(number: number): string {
     }
     return number.toString();
 }
+
+export default { formatPrice, formatTimestampToDateTime, formatNumberToK };
