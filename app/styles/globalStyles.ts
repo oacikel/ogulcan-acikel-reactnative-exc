@@ -40,4 +40,21 @@ export const globalStyles = StyleSheet.create({
         right: 8,
         top: 8
     },
+    toolTipContainer: {
+        position: 'absolute',
+    },
+    toolTipLabelContainer: {
+        justifyContent: 'center',
+    },
+    toolTipPriceLabel: {
+        color: Colors.textDark80,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
+    toolTipDateLabel: {
+        color: Colors.textDark,
+        textAlign: 'center',
+        fontSize: 12,
+    }
 });

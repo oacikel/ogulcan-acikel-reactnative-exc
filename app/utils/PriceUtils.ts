@@ -7,7 +7,8 @@ export function formatPrice(price: number, currency: string = 'TRY'): string {
     }).format(price);
 
     // Had to do some workarounds to abide the designs. Might need to refactor this later.
-    return currency === 'TRY' ? `${formattedPrice.replace('₺', '').trim()} TL` : formattedPrice;
+    const swappedPrice = formattedPrice.replace('.', '#').replace(',', '.').replace('#', ',');
+    return currency === 'TRY' ? `${swappedPrice.replace('₺', '').trim()} TL` : swappedPrice;
 }
 
 export function formatTimestampToDateTime(timestamp: number): string {
