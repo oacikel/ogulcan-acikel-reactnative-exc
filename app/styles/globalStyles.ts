@@ -75,4 +75,15 @@ export const globalStyles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '500',
     },
+    placeholderContainer: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    placeholderText: {
+        color: Colors.textDark,
+        fontFamily: 'Poppins_400Regular',
+        fontSize: 40,
+    },
 });

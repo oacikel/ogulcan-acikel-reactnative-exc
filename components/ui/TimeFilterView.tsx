@@ -1,7 +1,8 @@
 import { globalStyles } from '@/app/styles/globalStyles';
+import i18n from '@/i18n';
 import { TimeFilter } from '@/types/types';
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 
 interface TimeFilterViewProps {
     selectedFilter?: TimeFilter;
@@ -22,7 +23,7 @@ const TimeFilterView: React.FC<TimeFilterViewProps> = ({ selectedFilter, onFilte
                 onPress={() => handlePress('7D')}
                 style={activeFilter === '7D' ? globalStyles.filterActiveContainer : globalStyles.filterInactiveContainer}
             >
-                <Text style={activeFilter === '7D' ? globalStyles.filterActiveText: globalStyles.filterInactiveText }>Son 7 Gün</Text>
+                <Text style={activeFilter === '7D' ? globalStyles.filterActiveText: globalStyles.filterInactiveText }>{i18n.t('Last7Days')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => handlePress('1M')}

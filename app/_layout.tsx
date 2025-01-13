@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/store';
 import { Colors } from '@/constants/Colors';
+import i18n from '../i18n/';
 
 SplashScreen.preventAutoHideAsync();
 
