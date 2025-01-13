@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { DataPoint } from '@/types/types';
 import { formatPrice, formatTimestampToDateTime } from '@/app/utils/PriceUtils';
 import DashedLine from './DashedLine';
+import { globalStyles } from '@/app/styles/globalStyles';
 
 interface ToolTipProps {
   x: number; // X position of the tooltip
@@ -28,36 +29,14 @@ const ToolTip: React.FC<ToolTipProps> = ({ x, height, data }) => {
     }, [labelRef]);
 
   return (
-    <View style={[styles.tooltip, { left: x}, {bottom: 0}]}>
-      <View style={[styles.labelContainer, { right: labelWidth / 2 }]} ref={labelRef}>
-        <Text style={styles.priceLabel}>{formattedPrice}</Text>
-        <Text style={styles.dateLabel}>{formattedDate}</Text>
+    <View style={[globalStyles.toolTipContainer, { left: x}, {bottom: 0}]}>
+      <View style={[globalStyles.toolTipLabelContainer, { right: labelWidth / 2 }]} ref={labelRef}>
+        <Text style={globalStyles.toolTipPriceLabel}>{formattedPrice}</Text>
+        <Text style={globalStyles.toolTipDateLabel}>{formattedDate}</Text>
       </View>
       <DashedLine style={{ height: height }} orientation='vertical' />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  tooltip: {
-    position: 'absolute',
-  },
-  labelContainer: {
-    justifyContent: 'center',
-    marginBottom: 5, // Space between labels and line
-
-  },
-  priceLabel: {
-    color: 'black',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  dateLabel: {
-    color: 'black',
-    textAlign: 'center',
-    fontSize: 12,
-  }
-});
 
 export default ToolTip;

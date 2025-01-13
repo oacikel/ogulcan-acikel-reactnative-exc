@@ -8,6 +8,8 @@ import { TimeFilter } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setFilter } from './redux/slices/filterSlice';
+import { globalStyles } from './styles/globalStyles';
+import i18n from '@/i18n';
 
 const WalletAnalysis = () => {
   const { data, loading, error, fetchData } = useSampleData();
@@ -15,7 +17,6 @@ const WalletAnalysis = () => {
   const filter = useSelector((state:any) => state.filter.filter);
 
   useEffect(() => {
-    console.log('filter', filter);
     if (filter) {
       fetchData(filter);
     } else {
@@ -25,16 +26,16 @@ const WalletAnalysis = () => {
 
   if (loading) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View style={globalStyles.placeholderContainer}>
+        <Text style={globalStyles.placeholderText}>{i18n.t('loading')}</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View>
-        <Text>Error: {error}</Text>
+      <View style={globalStyles.placeholderContainer}>
+        <Text style={globalStyles.placeholderText}>{i18n.t('error')}</Text>
       </View>
     );
   }
@@ -43,15 +44,15 @@ const WalletAnalysis = () => {
     dispatch(setFilter(newFilter));
   }
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}> 
       <Stack.Screen
         options={{
-          title: 'Cüzdan Analizi'
+          title: i18n.t('walletAnalysis'),
         }}
       />
-      <TimeFilterView selectedFilter={filter} onFilterSelected={handleFilterChange} />
-      <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 80, padding: 20 }}>
-        <FinanceGraph data={data} style={{ height: 100, width: '100%' }} />
+      <View style={globalStyles.walletViewContainer}>
+        <TimeFilterView selectedFilter={filter} onFilterSelected={handleFilterChange} />
+        <FinanceGraph data={data} style={{ height: '45%', width: '100%' }} />
       </View>
     </View>
   );
@@ -60,5 +61,5 @@ const WalletAnalysis = () => {
 export default WalletAnalysis;
 
 WalletAnalysis.options = {
-  title: 'Cüzdan Analizi',
+  title: i18n.t('walletAnalysis'),
 };
