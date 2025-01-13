@@ -22,6 +22,7 @@ export const globalStyles = StyleSheet.create({
         padding: 10,
     },
     filterActiveText: {
+        fontFamily: 'Poppins_400Regular',
         color: Colors.primary,
         fontSize: 16,
     },
@@ -34,6 +35,7 @@ export const globalStyles = StyleSheet.create({
     },
     filterInactiveText: {
         color: Colors.textDark80,
+        fontFamily: 'Poppins_400Regular',
         fontSize: 16,
     },
     graphLabelContainer: {
@@ -43,6 +45,7 @@ export const globalStyles = StyleSheet.create({
     },
     graphLabelText: {
         color: Colors.textDark60,
+        fontFamily: 'Poppins_400Regular',
         fontSize: 16,
         right: 8,
         top: 8
@@ -56,16 +59,19 @@ export const globalStyles = StyleSheet.create({
     toolTipPriceLabel: {
         color: Colors.textDark80,
         textAlign: 'center',
+        fontFamily: 'Poppins_400Regular',
         fontWeight: 'bold',
         fontSize: 14,
     },
     toolTipDateLabel: {
         color: Colors.textDark,
         textAlign: 'center',
+        fontFamily: 'Poppins_400Regular',
         fontSize: 12,
     },
     profitTextLabel: {
         color: Colors.textPrimary,
+        fontFamily: 'Poppins_400Regular',
         fontSize: 24,
         fontWeight: '500',
     },
