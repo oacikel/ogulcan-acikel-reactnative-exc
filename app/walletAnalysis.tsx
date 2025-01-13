@@ -17,7 +17,6 @@ const WalletAnalysis = () => {
   const filter = useSelector((state:any) => state.filter.filter);
 
   useEffect(() => {
-    console.log('filter', filter);
     if (filter) {
       fetchData(filter);
     } else {
