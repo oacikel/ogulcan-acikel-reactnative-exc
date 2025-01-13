@@ -35,3 +35,8 @@ FinanceGraph is an Expo-based app for interactive financial data visualization, 
 
 - **Enhanced Tooltip Features:** Tooltip can overflow from the edges if user pans too much to the left / right. A dynamic solution can be implemented.
 - **Price Utils:** There are some room for improvement for the Price utils. Left as todo comments.
+
+## Contact
+
+For questions or inquiries, feel free to reach out:
+ogulcan.acikel@gmail.com
