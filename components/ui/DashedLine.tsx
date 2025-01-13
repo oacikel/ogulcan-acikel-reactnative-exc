@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import React from 'react';
 import { ViewStyle } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
@@ -11,7 +12,7 @@ interface DashedLineProps {
 const DashedLine: React.FC<DashedLineProps> = ({
     style,
     orientation,
-    color = 'lightgray',
+    color = Colors.textDark20,
 }) => {
     const width = orientation === 'horizontal' ? (style?.width ? Number(style.width) : '100%') : '1';
     const height = orientation === 'horizontal' ? '1' : (style?.height ? Number(style.height) : '100%'); 
@@ -26,8 +27,8 @@ const DashedLine: React.FC<DashedLineProps> = ({
                 x2={orientation === 'horizontal' ? width : '0'}
                 y2={orientation === 'horizontal' ? '0' : height}
                 stroke={color}
-                strokeWidth="1"
-                strokeDasharray="4"
+                strokeWidth="2"
+                strokeDasharray="10"
             />
         </Svg>
     );

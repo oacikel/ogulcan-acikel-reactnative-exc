@@ -2,11 +2,18 @@ import { Colors } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
 
 export const globalStyles = StyleSheet.create({
+    walletViewContainer: {
+        flex: 1,
+        padding: 20,
+        height: '100%',
+        gap: 40,
+
+    },
     filterViewContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
+        width: '100%',
         gap: 8,
-        padding: 10,
     },
     filterActiveContainer: {
         borderRadius: 20,
@@ -56,5 +63,10 @@ export const globalStyles = StyleSheet.create({
         color: Colors.textDark,
         textAlign: 'center',
         fontSize: 12,
-    }
+    },
+    profitTextLabel: {
+        color: Colors.textPrimary,
+        fontSize: 24,
+        fontWeight: '500',
+    },
 });

@@ -8,6 +8,7 @@ import { TimeFilter } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setFilter } from './redux/slices/filterSlice';
+import { globalStyles } from './styles/globalStyles';
 
 const WalletAnalysis = () => {
   const { data, loading, error, fetchData } = useSampleData();
@@ -43,15 +44,15 @@ const WalletAnalysis = () => {
     dispatch(setFilter(newFilter));
   }
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}> 
       <Stack.Screen
         options={{
           title: 'Cüzdan Analizi'
         }}
       />
-      <TimeFilterView selectedFilter={filter} onFilterSelected={handleFilterChange} />
-      <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 80, padding: 20 }}>
-        <FinanceGraph data={data} style={{ height: 292, width: '100%' }} />
+      <View style={globalStyles.walletViewContainer}>
+        <TimeFilterView selectedFilter={filter} onFilterSelected={handleFilterChange} />
+        <FinanceGraph data={data} style={{ height: '45%', width: '100%' }} />
       </View>
     </View>
   );
